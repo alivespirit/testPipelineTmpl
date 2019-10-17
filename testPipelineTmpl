@@ -1,0 +1,88 @@
+{
+ "schema": "v2",
+ "variables": [
+   {
+     "type": "string",
+     "defaultValue": "1.24.0",
+     "description": "Nginx version",
+     "name": "nginxVersion"
+   }
+ ],
+ "application": "istio",
+ "expectedArtifacts": [
+  {
+   "defaultArtifact": {
+    "id": "92923241-2c30-49a0-98da-d19eda5b3104",
+    "name": "gs://spin_bucket/nginx/nginx-ingress-${ templateVariables.nginxVersion }.tgz",
+    "reference": "gs://spin_bucket/nginx/nginx-ingress-${ templateVariables.nginxVersion }.tgz",
+    "type": "gcs/object"
+   },
+   "id": "2c5cbecf-381a-49a8-9f91-18cf768408af",
+   "matchArtifact": {
+    "id": "46c29adb-a208-46e7-8e72-a14d44f11c0e",
+    "name": "gs://spin_bucket/nginx/nginx-ingress-${ templateVariables.nginxVersion }.tgz",
+    "type": "gcs/object"
+   },
+   "useDefaultArtifact": true,
+   "usePriorArtifact": false
+  }
+ ],
+ "id": "testPipelineTmpl",
+ "index": 0,
+ "keepWaitingPipelines": false,
+ "lastModifiedBy": "anonymous",
+ "limitConcurrent": true,
+ "name": "test",
+ "stages": [
+   {
+   "expectedArtifacts": [
+    {
+     "defaultArtifact": {},
+     "id": "ffdd696f-d692-429e-804d-4ec243b3b8d5",
+     "matchArtifact": {
+      "kind": "base64",
+      "name": "nginx",
+      "type": "embedded/base64"
+     },
+     "useDefaultArtifact": false
+    }
+   ],
+   "inputArtifacts": [
+    {
+     "account": "gcs-artifact-account",
+     "id": "2c5cbecf-381a-49a8-9f91-18cf768408af"
+    }
+   ],
+   "name": "Bake (Manifest)",
+   "namespace": "spinnaker",
+   "outputName": "nginx",
+   "overrides": {},
+   "refId": "1",
+   "requisiteStageRefIds": [],
+   "templateRenderer": "HELM2",
+   "type": "bakeManifest"
+  },
+  {
+   "account": "default",
+   "cloudProvider": "kubernetes",
+   "manifestArtifactAccount": "embedded-artifact",
+   "manifestArtifactId": "ffdd696f-d692-429e-804d-4ec243b3b8d5",
+   "moniker": {
+    "app": "rmykh"
+   },
+   "name": "Deploy (Manifest)",
+   "refId": "2",
+   "relationships": {
+    "loadBalancers": [],
+    "securityGroups": []
+   },
+   "requisiteStageRefIds": [
+    "1"
+   ],
+   "source": "artifact",
+   "type": "deployManifest"
+  }
+ ],
+ "triggers": [],
+ "updateTs": "1571227743240"
+}
